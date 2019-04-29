@@ -8,7 +8,7 @@ The Arduino is also connected to a button and an analog potentiometer.
 The button selects which demo to execute, and the pot controls the
 demo.
 
-## Libray Usage
+## Library Usage
 
 This sketch requires the use of the 'FastLED' library.
 The library provides all the code to efficiently drive the LED string.
