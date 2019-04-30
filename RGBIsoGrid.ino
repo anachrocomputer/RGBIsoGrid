@@ -46,6 +46,17 @@ const unsigned char row6[] = {40, 32, 31, 30, 29, 28, 48, 255};
 const unsigned char row7[] = {33, 34, 35, 36, 255};
 const unsigned char row8[] = {39, 38, 37, 255};
 
+const unsigned char digit0[] = {0, 1, 2, 3, 4, 14, 15, 27, 28, 36, 35, 34, 33, 32, 22, 21, 9, 8, 255};
+const unsigned char digit1[] = {0, 7, 11, 18, 25, 29, 36, 255};
+const unsigned char digit2[] = {3, 2, 1, 0, 8, 9, 20, 19, 18, 17, 16, 27, 28, 36, 35, 34, 33, 255};
+const unsigned char digit3[] = {0, 1, 2, 3, 4, 14, 16, 17, 18, 19, 27, 28, 36, 35, 34, 33, 255};
+const unsigned char digit4[] = {0, 7, 11, 18, 25, 29, 36, 33, 32, 22, 21, 20, 19, 17, 16, 15, 255};
+const unsigned char digit5[] = {0, 1, 2, 3, 4, 14, 16, 17, 18, 19, 20, 22, 32, 33, 34, 35, 36, 255};
+const unsigned char digit6[] = {0, 1, 2, 3, 4, 8, 9, 14, 16, 17, 18, 19, 20, 21, 22, 32, 33, 34, 35, 36, 255};
+const unsigned char digit7[] = {0, 7, 11, 17, 18, 19, 25, 29, 36, 35, 34, 33, 255};
+const unsigned char digit8[] = {0, 1, 2, 3, 4, 8, 9, 14, 27, 28, 36, 35, 34, 33, 32, 22, 20, 19, 18, 17, 16, 255};
+const unsigned char digit9[] = {0, 1, 2, 3, 4, 14, 15, 27, 28, 36, 35, 34, 33, 32, 22, 20, 19, 18, 17, 16, 255};
+
 const long Frame01[NUM_LEDS] PROGMEM =
 {
 0xff0000, 0x000000, 0x000000, 0x00ff00, 0x000000, 0x00ff00, 0x000000, 0xff0000, // 0-7
@@ -92,6 +103,7 @@ void loop(void)
   int hue;
   int dot = 0;
   int dir = 1;
+  int digit = 0;
   int mode = 0;
 
   for (frame = 0; ; frame++) {
@@ -194,13 +206,55 @@ void loop(void)
 
       FastLED.show();
       break;
+    case 10:
+      FastLED.clear();
+      if ((frame % 75) == 0)
+        if (digit < 9)
+          digit++;
+        else
+          digit = 0;
+
+      switch (digit) {
+      case 0:
+        sethex(digit0, CHSV(level, 255, 255));
+        break;
+      case 1:
+        sethex(digit1, CHSV(level, 255, 255));
+        break;
+      case 2:
+        sethex(digit2, CHSV(level, 255, 255));
+        break;
+      case 3:
+        sethex(digit3, CHSV(level, 255, 255));
+        break;
+      case 4:
+        sethex(digit4, CHSV(level, 255, 255));
+        break;
+      case 5:
+        sethex(digit5, CHSV(level, 255, 255));
+        break;
+      case 6:
+        sethex(digit6, CHSV(level, 255, 255));
+        break;
+      case 7:
+        sethex(digit7, CHSV(level, 255, 255));
+        break;
+      case 8:
+        sethex(digit8, CHSV(level, 255, 255));
+        break;
+      case 9:
+        sethex(digit9, CHSV(level, 255, 255));
+        break;
+      }
+      FastLED.show();
+      break;
     }
 
     if (digitalRead(BUTTON_PIN) == LOW) {
       while (digitalRead(BUTTON_PIN) == LOW)
         ;
    
-      if (mode < 9)
+      if (mode < 10)
         mode++;
       else
         mode = 0;
@@ -218,4 +272,3 @@ void sethex(const unsigned char hex[], CRGB colour)
     Leds[hex[i]] = colour;
   }
 }
-
