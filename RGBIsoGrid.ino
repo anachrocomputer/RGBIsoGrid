@@ -51,7 +51,7 @@ const unsigned char row8[] = {39, 38, 37, 255};
 
 // Decimal digits 0-9, in terms of LED numbers
 const unsigned char digit0[] = {0, 1, 2, 3, 4, 14, 15, 27, 28, 36, 35, 34, 33, 32, 22, 21, 9, 8, 255};
-const unsigned char digit1[] = {0, 7, 11, 18, 25, 29, 36, 255};
+const unsigned char digit1[] = {0, 7, 11, 18, 25, 29, 36, 35, 255};
 const unsigned char digit2[] = {3, 2, 1, 0, 8, 9, 20, 19, 18, 17, 16, 27, 28, 36, 35, 34, 33, 255};
 const unsigned char digit3[] = {0, 1, 2, 3, 4, 14, 16, 17, 18, 19, 27, 28, 36, 35, 34, 33, 255};
 const unsigned char digit4[] = {0, 7, 11, 18, 25, 29, 36, 33, 32, 22, 21, 20, 19, 17, 16, 15, 255};
