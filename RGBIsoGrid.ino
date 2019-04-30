@@ -108,15 +108,15 @@ void loop(void)
   int i;
   int hue;
   int dot = 0;
-  int dir = 1;
+  int dir = 1;    // Direction flag
   int digit = 0;  // Digit 0-9
   int mode = 0;   // Demo mode, selected by the push-button switch
 
   for (frame = 0; ; frame++) {
-    ana = analogRead(0);
+    ana = analogRead(0);    // Read analog pot
     
-    level = map(ana, 0, 1023, 0, 255);
-    led = map(ana, 0, 1023, 0, NUM_LEDS - 1);
+    level = map(ana, 0, 1023, 0, 255);          // Scale pot for 0-255
+    led = map(ana, 0, 1023, 0, NUM_LEDS - 1);   // Scale pot for LED index
 
     switch (mode) {
     case 0:   // Just show a fixed colour, with adjustable brightness
@@ -125,7 +125,7 @@ void loop(void)
     case 1:   // Show an adjustable hue, at fixed brightness
       FastLED.showColor(CHSV(level, 255, 255), BRIGHTNESS);
       break;
-    case 2:
+    case 2:   // Single LED lit, scanning up and down the chain
       FastLED.clear();
       Leds[dot] = CHSV(level, 255, 255);
       FastLED.show();
@@ -140,12 +140,12 @@ void loop(void)
         dot += dir;
       }
       break;
-    case 3:
+    case 3:   // Pot controls which LED in chain is lit in red
       FastLED.clear();
       Leds[led] = CRGB::Red;
       FastLED.show();
       break;
-    case 4:
+    case 4:   // Display two alternating frames of animation (from Program memory)
       for (i = 0; i < NUM_LEDS; i++) {
         if ((frame / 24) & 1)
           Leds[i] = pgm_read_dword(&(Frame02[i]));
@@ -155,13 +155,13 @@ void loop(void)
   
       FastLED.show();
       break;
-    case 5:
+    case 5:   // Display random colours (all LEDs the same colour)
       FastLED.showColor(RandomColours[dot], level);
       if ((frame % 10) == 0)
         if (++dot > 11)
           dot = 0;
       break;
-    case 6:
+    case 6:   // Hue cycle along entire LED chain
       for (i = 0; i < NUM_LEDS; i++) {
         hue = map(i, 0, NUM_LEDS - 1, 0, 255);
         hue = (hue + level) & 255;
@@ -212,7 +212,7 @@ void loop(void)
 
       FastLED.show();
       break;
-    case 10:  // Display digits 0-9
+    case 10:  // Display digits 0-9, pot adjusts hue
       FastLED.clear();
       if ((frame % 75) == 0)
         if (digit < 9)
@@ -269,6 +269,9 @@ void loop(void)
     delay(20);
   }
 }
+
+
+/* sethex --- set a list of LEDs to a given colour */
 
 void sethex(const unsigned char hex[], CRGB colour)
 {
