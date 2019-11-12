@@ -281,13 +281,53 @@ void loop(void)
       
       FastLED.show();
       break;
+    case 12:  // Display animated rows
+      FastLED.clear();
+      if ((frame % 25) == 0)
+        if (digit < 8)
+          digit++;
+        else
+          digit = 0;
+
+      switch (digit) {
+      case 0:
+        sethex(row0, CHSV(level, 255, 255));
+        break;
+      case 1:
+        sethex(row1, CHSV(level, 255, 255));
+        break;
+      case 2:
+        sethex(row2, CHSV(level, 255, 255));
+        break;
+      case 3:
+        sethex(row3, CHSV(level, 255, 255));
+        break;
+      case 4:
+        sethex(row4, CHSV(level, 255, 255));
+        break;
+      case 5:
+        sethex(row5, CHSV(level, 255, 255));
+        break;
+      case 6:
+        sethex(row6, CHSV(level, 255, 255));
+        break;
+      case 7:
+        sethex(row7, CHSV(level, 255, 255));
+        break;
+      case 8:
+        sethex(row8, CHSV(level, 255, 255));
+        break;
+      }
+      
+      FastLED.show();
+      break;
     }
 
     if (digitalRead(BUTTON_PIN) == LOW) {
       while (digitalRead(BUTTON_PIN) == LOW)
         ;
    
-      if (mode < 11)
+      if (mode < 12)
         mode++;
       else
         mode = 0;
