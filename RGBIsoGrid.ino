@@ -254,13 +254,40 @@ void loop(void)
       }
       FastLED.show();
       break;
+    case 11:  // Display animated hexagons
+      FastLED.clear();
+      if ((frame % 25) == 0)
+        if (digit < 3)
+          digit++;
+        else
+          digit = 0;
+
+      switch (digit) {
+      case 0:
+        sethex(hex1, CHSV(level, 255, 255));
+        break;
+      case 1:
+        sethex(hex2, CHSV(level, 255, 255));
+        break;
+      case 2:
+        sethex(hex3, CHSV(level, 255, 255));
+        break;
+      case 3:
+        sethex(hex4, CHSV(level, 255, 255));
+        break;
+      }
+
+      Leds[hex0[0]] = CRGB::White;
+      
+      FastLED.show();
+      break;
     }
 
     if (digitalRead(BUTTON_PIN) == LOW) {
       while (digitalRead(BUTTON_PIN) == LOW)
         ;
    
-      if (mode < 10)
+      if (mode < 11)
         mode++;
       else
         mode = 0;
