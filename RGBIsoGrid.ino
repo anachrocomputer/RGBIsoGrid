@@ -91,6 +91,22 @@ const CRGB RandomColours[12] = {
 };
 
 
+// Rows of pink, blue & white
+const CRGB FlagStripes[9] = {
+  CRGB::Blue,  CRGB::Blue,
+  CRGB::Magenta,  CRGB::Magenta,  // Magenta works better as a pink on my LEDs
+  CRGB::White,
+  CRGB::Magenta,  CRGB::Magenta,
+  CRGB::Blue,  CRGB::Blue
+};
+
+// Six 60degree sectors of pink, blue & white
+const CRGB FlagSectors[6] = {
+  CRGB::Blue, CRGB::Magenta, CRGB::White,
+  CRGB::Magenta, CRGB::Blue, CRGB::White
+};
+
+
 void setup(void)
 {
   Serial.begin(9600);
@@ -103,7 +119,7 @@ void setup(void)
 void loop(void)
 {
   int ana;        // Analog pot reading, 0-1023
-  int led, level;
+  int led, row, level;
   int frame;
   int i;
   int hue;
@@ -116,6 +132,7 @@ void loop(void)
     ana = analogRead(0);    // Read analog pot
     
     level = map(ana, 0, 1023, 0, 255);          // Scale pot for 0-255
+    row = map(ana, 0, 1023, 0, 9);              // Scale pot for 0-8 (row number)
     led = map(ana, 0, 1023, 0, NUM_LEDS - 1);   // Scale pot for LED index
 
     switch (mode) {
@@ -161,17 +178,7 @@ void loop(void)
         if (++dot > 11)
           dot = 0;
       break;
-    case 6:   // Hue cycle along entire LED chain
-      for (i = 0; i < NUM_LEDS; i++) {
-        hue = map(i, 0, NUM_LEDS - 1, 0, 255);
-        hue = (hue + level) & 255;
-        
-        Leds[i] = CHSV(hue, 255, 255);
-      }
-
-      FastLED.show();
-      break;
-    case 7:   // Hue-cycling by concentric hexagons
+    case 6:   // Hue-cycling by concentric hexagons
       FastLED.clear();
       
       sethex(hex0, CRGB::White);
@@ -181,7 +188,7 @@ void loop(void)
       sethex(hex4, CHSV((level + 192) & 255, 255, 255));
       FastLED.show();
       break;
-    case 8:   // Hue-cycling by row
+    case 7:   // Hue-cycling by row
       FastLED.clear();
       
       sethex(row0, CHSV(level, 255, 255));
@@ -193,6 +200,20 @@ void loop(void)
       sethex(row6, CHSV((level + 171) & 255, 255, 255));
       sethex(row7, CHSV((level + 199) & 255, 255, 255));
       sethex(row8, CHSV((level + 228) & 255, 255, 255));
+      FastLED.show();
+      break;
+    case 8:   // Hue-cycling rows of pink, blue & white
+      FastLED.clear();
+      
+      sethex(row0, FlagStripes[row % 9]);
+      sethex(row1, FlagStripes[(row + 1) % 9]);
+      sethex(row2, FlagStripes[(row + 2) % 9]);
+      sethex(row3, FlagStripes[(row + 3) % 9]);
+      sethex(row4, FlagStripes[(row + 4) % 9]);
+      sethex(row5, FlagStripes[(row + 5) % 9]);
+      sethex(row6, FlagStripes[(row + 6) % 9]);
+      sethex(row7, FlagStripes[(row + 7) % 9]);
+      sethex(row8, FlagStripes[(row + 8) % 9]);
       FastLED.show();
       break;
     case 9:   // Rotating hue-cycle
@@ -212,7 +233,21 @@ void loop(void)
 
       FastLED.show();
       break;
-    case 10:  // Display digits 0-9, pot adjusts hue
+    case 10:  // Rotating pink, blue & white
+      FastLED.clear();
+
+      for (i = 0; i < NUM_LEDS; i++) {
+        const unsigned int theta = (Posn[i].theta + level) % 360;
+
+        hue = map(theta, 0, 360, 0, 6);
+        Leds[i] = FlagSectors[hue];
+      }
+
+      Leds[hex0[0]] = CRGB::White;
+
+      FastLED.show();
+      break;
+    case 11:  // Display digits 0-9, pot adjusts hue
       FastLED.clear();
       if ((frame % 75) == 0)
         if (digit < 9)
@@ -260,7 +295,7 @@ void loop(void)
       while (digitalRead(BUTTON_PIN) == LOW)
         ;
    
-      if (mode < 10)
+      if (mode < 11)
         mode++;
       else
         mode = 0;
