@@ -1,3 +1,7 @@
+![Static Badge](https://img.shields.io/badge/MCU-ATmega328-green "MCU:ATmega328")
+![Static Badge](https://img.shields.io/badge/BOARD-Arduino-green "BOARD:Arduino")
+![Static Badge](https://img.shields.io/badge/DISPLAY-WS2812-green "DISPLAY:WS2812")
+
 # RGBIsoGrid
 
 This Arduino sketch drives a string of 49 WS2812 RGB LEDs, arranged
